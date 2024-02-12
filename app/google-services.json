@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "233486052247",
+    "project_id": "pyramid-cee72",
+    "storage_bucket": "pyramid-cee72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233486052247:android:4a16d5cd01d6ef71a032d2",
+        "android_client_info": {
+          "package_name": "com.company.pyramid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAszt_Jrn2eLWq3nZKZH4U67AI4UvawuME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233486052247:android:60433631d2aba3bca032d2",
+        "android_client_info": {
+          "package_name": "com.example.pyramid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAszt_Jrn2eLWq3nZKZH4U67AI4UvawuME"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

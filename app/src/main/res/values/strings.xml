@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">pyramid</string>
+    <string name="pyramida">Pyramida</string>
+    <string name="login">Přihlásit</string>
+    <string name="register">Zaregistrovat</string>
+    <string name="exit">Ukončit</string>
+    <string name="friends">Přátelé</string>
+    <string name="play">Hrát</string>
+</resources>

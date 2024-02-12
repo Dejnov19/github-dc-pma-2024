@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">pyramid</string>
+    <string name="pyramida">Pyramid</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="exit">Exit</string>
+    <string name="friends">Friends</string>
+    <string name="play">Play</string>
+</resources>
