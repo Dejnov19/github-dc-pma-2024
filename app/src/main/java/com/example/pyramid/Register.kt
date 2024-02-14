@@ -135,7 +135,8 @@ private fun addToDB(email: String, nickname: String, password: String) {
         val user = hashMapOf(
             "email" to email,
             "nickname" to nickname,
-            "friends" to listOf<String>()
+            "friends" to listOf<String>(),
+            "SingleFriends" to listOf<String>()
         )
         db.collection("users")
             .document(userId)
