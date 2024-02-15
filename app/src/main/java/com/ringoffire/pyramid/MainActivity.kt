@@ -53,7 +53,6 @@
                         composable("setup") { SetupForm(navController) }
                         composable("game") { GameForm(navController) }
                         composable("friends") { FriendsForm(navController) }
-                        composable("playSetup") { PlaySetupForm(navController) }
                         composable("game") { GameForm(navController) }
                         composable("register") { RegisterForm(navController)
                         }
@@ -74,7 +73,6 @@
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
-            // Image background
             Image(
                 painter = painterResource(R.drawable.back_removed),
                 contentDescription = "pozadi",
