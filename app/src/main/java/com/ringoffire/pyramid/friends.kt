@@ -1,11 +1,7 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
 import android.content.Context
-import android.os.Build
-import android.service.controls.ControlsProviderService.TAG
-import android.util.Log
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
@@ -50,8 +47,6 @@ import kotlinx.coroutines.tasks.await
 @Composable
 fun FriendsForm(navController: NavController) {
     val friendsFlow = getUserFriendsFromFirestore().collectAsState(initial = emptyList())
-
-    // State to track whether the dialog should be shown or not
     var isDialogOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -62,7 +57,6 @@ fun FriendsForm(navController: NavController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // List of friends
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
@@ -71,7 +65,6 @@ fun FriendsForm(navController: NavController) {
             }
         }
 
-        // Add friend button
         IconButton(
             onClick = {
                 isDialogOpen = true
@@ -120,12 +113,9 @@ fun getUserFriendsFromFirestore(): Flow<List<String>> = flow {
         val friendIds = userDoc.get("friends") as? List<String> ?: emptyList()
         val friendsList = mutableListOf<String>()
 
-        Log.d(TAG, "Friend IDs: $friendIds")
-
         for (friendId in friendIds) {
             val friendDoc = db.collection("users").document(friendId).get().await()
             val nickname = friendDoc.getString("nickname")
-            Log.d(TAG, "Friend ID: $friendId, Nickname: $nickname")
             nickname?.let {
                 friendsList.add(it)
             }
@@ -142,7 +132,6 @@ fun getUserFriendsFromFirestore(): Flow<List<String>> = flow {
         val db = Firebase.firestore
         val currentUser = FirebaseAuth.getInstance().currentUser
         val userId = currentUser?.uid
-        //ZDE DOPLNIT USER ID k NICkNAME
         if (userId != null) {
 
             db.collection("users")
@@ -153,20 +142,15 @@ fun getUserFriendsFromFirestore(): Flow<List<String>> = flow {
                         db.collection("users").document(userId)
                             .update("friends", FieldValue.arrayUnion(document.id))
                             .addOnSuccessListener {
-                                Log.d(TAG, "Friend added successfully")
-                                Toast.makeText(context, "Friends added", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, R.string.friend_added, Toast.LENGTH_SHORT).show()
                             }
                             .addOnFailureListener { e ->
-                                Log.w(TAG, "Error adding friend", e)
+                                Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+
                             }
-
-
-
-                        //Log.d(TAG, "Document ID: ${document.id}")
-                        //Log.d(TAG, "Data: ${document.data}")
                     }
                 }.addOnFailureListener { e ->
-                    Toast.makeText(context, "Friend doenst exist", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
                 }
 
 
@@ -198,8 +182,8 @@ fun FriendsDialog(
                 OutlinedTextField(
                     value = friendNameText,
                     onValueChange = { friendNameText = it },
-                    label = { Text("Friend Name") },
-                    placeholder = { Text("Enter your friend's name") },
+                    label = { R.string.Friend_Name },
+                    placeholder = { R.string.Friend_Name },
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -214,13 +198,13 @@ fun FriendsDialog(
                         onClick = { onDismissRequest() },
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        Text("Dismiss")
+                        Text(stringResource(R.string.exit))
                     }
                     TextButton(
                         onClick = { onConfirmation(friendNameText) },
                         modifier = Modifier.padding(8.dp),
                     ) {
-                        Text("Confirm")
+                        Text(stringResource(R.string.Confirm))
                     }
                 }
             }

@@ -1,9 +1,28 @@
 <resources>
-    <string name="app_name">pyramid</string>
+    <string name="app_name">Pyramid</string>
     <string name="pyramida">Pyramida</string>
     <string name="login">Přihlásit</string>
     <string name="register">Zaregistrovat</string>
     <string name="exit">Ukončit</string>
     <string name="friends">Přátelé</string>
     <string name="play">Hrát</string>
+    <string name="rof">Ring of Fire</string>
+    <string name="friend_added">Přítel přidán</string>
+    <string name="Friend_doesnt_exist">Přítel neexistuje</string>
+    <string name="Friend_Name">Jméno přitele</string>
+    <string name="Confirm">Potvrdit</string>
+    <string name="loading">Načítání</string>
+    <string name="Next_Card">Další karta</string>
+    <string name="Friend">Přítel</string>
+    <string name="Friend_add">Přidat přítele</string>
+    <string name="Start_game">Začít hru</string>
+    <string name="Enter_your_email">Zadejte Váš email</string>
+    <string name="password">Heslo</string>
+    <string name="Enter_your_password">Zadejte Vaše heslo</string>
+    <string name="Cannot_be_empty">Pole nemohou zůstat prázdná</string>
+    <string name="wrong">Špatné údaje</string>
+    <string name="nickname">Přezdívka</string>
+    <string name="Enter_your_nickname">Zadejte Vaší přezdívku</string>
+    <string name="succ">Úspěšná registrace</string>
+    <string name="unsucc">Registrace se nezdařila</string>
 </resources>

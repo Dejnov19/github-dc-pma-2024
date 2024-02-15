@@ -1,20 +1,19 @@
-    package com.example.pyramid
+    package com.ringoffire.pyramid
 
     import android.os.Bundle
     import androidx.activity.ComponentActivity
     import androidx.activity.compose.setContent
+    import androidx.compose.foundation.Image
+    import androidx.compose.foundation.background
     import androidx.compose.foundation.layout.Arrangement
+    import androidx.compose.foundation.layout.Box
     import androidx.compose.foundation.layout.Column
     import androidx.compose.foundation.layout.fillMaxHeight
     import androidx.compose.foundation.layout.fillMaxSize
     import androidx.compose.foundation.layout.fillMaxWidth
-    import androidx.compose.foundation.layout.height
     import androidx.compose.foundation.layout.padding
-    import androidx.compose.foundation.layout.size
     import androidx.compose.foundation.layout.width
     import androidx.compose.material3.ButtonDefaults
-    import androidx.compose.material3.Card
-    import androidx.compose.material3.CardDefaults
     import androidx.compose.material3.FilledTonalButton
     import androidx.compose.material3.MaterialTheme
     import androidx.compose.material3.Surface
@@ -23,15 +22,17 @@
     import androidx.compose.ui.Alignment
     import androidx.compose.ui.Modifier
     import androidx.compose.ui.graphics.Color
+    import androidx.compose.ui.graphics.ColorFilter
+    import androidx.compose.ui.layout.ContentScale
+    import androidx.compose.ui.res.painterResource
     import androidx.compose.ui.res.stringResource
-    import androidx.compose.ui.text.style.TextAlign
-    import androidx.compose.ui.tooling.preview.Preview
+    import androidx.compose.ui.text.font.FontWeight
     import androidx.compose.ui.unit.dp
     import androidx.navigation.NavController
     import androidx.navigation.compose.NavHost
     import androidx.navigation.compose.composable
     import androidx.navigation.compose.rememberNavController
-    import com.example.pyramid.ui.theme.PyramidTheme
+    import com.ringoffire.pyramid.ui.theme.PyramidTheme
 
     class MainActivity : ComponentActivity() {
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,15 +71,28 @@
         //nastavení pevných proměnných
         val buttonWidth = 150.dp
 
-        Column(
+        Box(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            // Image background
+            Image(
+                painter = painterResource(R.drawable.back_removed),
+                contentDescription = "pozadi",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds,
+                alpha = 0.5f
+            )
+
+
+            Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Text(text = stringResource(R.string.pyramida),
-                style = MaterialTheme.typography.titleLarge,
+            Text(text = stringResource(R.string.rof),
+                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(top = 16.dp, bottom = 148.dp))
             FilledTonalButton(
                 onClick = {navController.navigate("log")},
@@ -103,6 +117,7 @@
             ) {
                 Text(stringResource(R.string.exit))
             }
+        }
         }
     }
 

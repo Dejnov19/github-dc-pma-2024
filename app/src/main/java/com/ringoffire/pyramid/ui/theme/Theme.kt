@@ -1,4 +1,4 @@
-package com.example.pyramid.ui.theme
+package com.ringoffire.pyramid.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -28,10 +28,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.pyramid" />
-                  <option name="mobileSdkAppId" value="1:233486052247:android:60433631d2aba3bca032d2" />
-                  <option name="projectId" value="pyramid-cee72" />
-                  <option name="projectNumber" value="233486052247" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

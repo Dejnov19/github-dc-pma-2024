@@ -1,14 +1,10 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -16,10 +12,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,7 +48,7 @@ fun LogForm(navController: NavController) {
             value = emailText,
             onValueChange = { emailText = it },
             label = { Text("Email") },
-            placeholder = { Text("Enter your email") },
+            placeholder = { Text(stringResource(R.string.Enter_your_email)) },
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
             trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) },
             modifier = Modifier.fillMaxWidth().padding(20.dp)
@@ -63,8 +57,8 @@ fun LogForm(navController: NavController) {
         OutlinedTextField(
             value = passwordText,
             onValueChange = { passwordText = it },
-            label = { Text("Password") },
-            placeholder = { Text("Enter your password") },
+            label = { Text(stringResource(R.string.password))},
+            placeholder = { Text(stringResource(R.string.Enter_your_password)) },
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
             trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) },
             modifier = Modifier.fillMaxWidth().padding(20.dp)
@@ -87,19 +81,17 @@ fun LogForm(navController: NavController) {
 private fun signInWithEmailAndPassword(email: String, password: String,navController: NavController,context: Context) {
     val auth = Firebase.auth
     if (email.isBlank() || password.isBlank()) {
-        Toast.makeText(context, "Email or password cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.Cannot_be_empty), Toast.LENGTH_SHORT).show()
         return
     }
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 navController.navigate("setup")
-                Log.d(TAG, "successful login")
             } else { //if didnt connect
-                Log.w(TAG, "failed login", task.exception)
                 Toast.makeText(
                     context,
-                    "Wrong password or email",
+                    context.getString(R.string.wrong),
                     Toast.LENGTH_SHORT
                 ).show()
             }

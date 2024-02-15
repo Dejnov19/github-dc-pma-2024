@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.pyramid"
+    namespace = "com.ringoffire.pyramid"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.pyramid"
+        applicationId = "com.ringoffire.pyramid"
         minSdk = 28
         targetSdk = 34
         versionCode = 1

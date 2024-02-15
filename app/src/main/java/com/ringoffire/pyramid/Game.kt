@@ -1,4 +1,4 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
@@ -184,8 +183,7 @@ fun GameForm(navController: NavController) {
                         friendList.value = friends
                     }
                 }
-                .addOnFailureListener { exception ->
-                    // Handle failure
+                .addOnFailureListener {
                 }
         }
     }
@@ -198,7 +196,7 @@ fun GameForm(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = friendList.value.getOrNull(currentFriendIndex.value) ?: "loading Name",
+            text = friendList.value.getOrNull(currentFriendIndex.value) ?: stringResource(R.string.loading),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -216,7 +214,7 @@ fun GameForm(navController: NavController) {
             painter = painterResource(id = cardImages[currentImageIndex.intValue]),
             contentDescription = "Actual card",
             modifier = Modifier
-                .size(200.dp) // Adjust the size as needed
+                .size(200.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text("Card ${currentImageIndex.intValue + 1}/$totalCards")
@@ -226,7 +224,7 @@ fun GameForm(navController: NavController) {
             currentFriendIndex.value = (currentFriendIndex.value + 1) % friendList.value.size
 
         }) {
-            Text("Next Card")
+            Text(stringResource(R.string.Next_Card))
         }
     }
 

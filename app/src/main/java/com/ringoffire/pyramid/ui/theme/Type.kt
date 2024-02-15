@@ -1,4 +1,4 @@
-package com.example.pyramid.ui.theme
+package com.ringoffire.pyramid.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

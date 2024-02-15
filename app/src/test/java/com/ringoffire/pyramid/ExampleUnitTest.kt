@@ -1,4 +1,4 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
 import org.junit.Test
 

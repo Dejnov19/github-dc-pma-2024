@@ -1,7 +1,6 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
-import android.content.ContentValues
-import android.util.Log
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
@@ -32,20 +32,16 @@ fun PlaySetupForm(navController: NavController) {
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Display existing friends
         friendNames.value.forEachIndexed { index, name ->
-            Text(text = "Friend ${index + 1}: $name")
+            Text(text = "${index + 1}: $name")
         }
-
-        // Input field for adding new friends
         TextField(
             value = newFriendName.value,
             onValueChange = { newFriendName.value = it },
-            label = { Text("Enter friend's name") },
+            label = { Text(stringResource(R.string.Friend_Name)) },
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        // Button to add a new friend
         Button(
             onClick = {
                 friendNames.value = friendNames.value + newFriendName.value
@@ -53,10 +49,9 @@ fun PlaySetupForm(navController: NavController) {
             },
             enabled = newFriendName.value.isNotBlank()
         ) {
-            Text("Add Friend")
+            Text(stringResource(R.string.Friend_add))
         }
 
-        // Button to proceed to the next step (e.g., start the game)
         Button(
             onClick = {
                     saveFriendListToDatabase(friendList = friendNames.value)
@@ -64,7 +59,7 @@ fun PlaySetupForm(navController: NavController) {
             },
             enabled = friendNames.value.isNotEmpty()
         ) {
-            Text("Start Game")
+            Text(stringResource(R.string.Start_game))
         }
     }
 }
@@ -78,10 +73,8 @@ private fun saveFriendListToDatabase(friendList: List<String>) {
         val userRef = db.collection("users").document(userId)
         userRef.update("singleFriends", friendList)
             .addOnSuccessListener {
-                Log.d(ContentValues.TAG, "Friends added: $userId")
             }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Unknow error", e)
+            .addOnFailureListener {
             }
     }
 }

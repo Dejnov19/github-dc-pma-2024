@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pyramid</string>
+    <string name="app_name">Pyramid</string>
     <string name="pyramida">Pyramid</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="exit">Exit</string>
     <string name="friends">Friends</string>
     <string name="play">Play</string>
+    <string name="rof">Ring of Fire</string>
+    <string name="friend_added">Friend added</string>
+    <string name="Friend_doesnt_exist">Friend doesn\'t exist</string>
+    <string name="Friend_Name">Friend Name</string>
+    <string name="Confirm">Confirm</string>
+    <string name="loading">Loading</string>
+    <string name="Next_Card">Next Card</string>
+    <string name="Friend">Friend</string>
+    <string name="Friend_add">Add Friend</string>
+    <string name="Start_game">Start Game</string>
+    <string name="Enter_your_email">Enter your email</string>
+    <string name="password">password</string>
+    <string name="Enter_your_password">Enter your password</string>
+    <string name="Cannot_be_empty">Email or password cannot be empty</string>
+    <string name="wrong">Wrong email or password</string>
+    <string name="nickname">Nickname</string>
+    <string name="Enter_your_nickname">Enter your nickname</string>
+    <string name="succ">Successful registration</string>
+    <string name="unsucc">Registration failed</string>
 </resources>

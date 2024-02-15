@@ -1,25 +1,20 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -59,7 +53,7 @@ fun RegisterForm(navController: NavController) {
             value = emailText,
             onValueChange = { emailText = it },
             label = { Text("Email") },
-            placeholder = { Text("Enter your email") },
+            placeholder = { Text(stringResource(R.string.Enter_your_email)) },
             leadingIcon = {
                 Icon(Icons.Default.Email, contentDescription = null)
             },
@@ -69,8 +63,8 @@ fun RegisterForm(navController: NavController) {
         OutlinedTextField(
             value = nicknameText,
             onValueChange = { nicknameText = it },
-            label = { Text("Nickname") },
-            placeholder = { Text("Enter your nickname") },
+            label = { Text(stringResource(R.string.nickname))},
+            placeholder = { Text(stringResource(R.string.Enter_your_nickname)) },
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
             trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) },
             modifier = Modifier.fillMaxWidth().padding(20.dp)
@@ -79,8 +73,8 @@ fun RegisterForm(navController: NavController) {
         OutlinedTextField(
             value = passwordText,
             onValueChange = { passwordText = it },
-            label = { Text("Password") },
-            placeholder = { Text("Enter your password") },
+            label = { Text(stringResource(R.string.password))},
+            placeholder = { Text(stringResource(R.string.Enter_your_password)) },
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
             trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) },
             modifier = Modifier.fillMaxWidth().padding(20.dp)
@@ -100,7 +94,7 @@ fun RegisterForm(navController: NavController) {
 
 private fun registerUser(email: String, nickname: String, password: String,navController: NavController, context: Context) {
     if (email.isBlank() || nickname.isBlank() || password.isBlank()) {
-        Toast.makeText(context, "Credencials cannot be empty", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.Cannot_be_empty), Toast.LENGTH_SHORT).show()
         return
     }
     val auth = FirebaseAuth.getInstance()
@@ -114,20 +108,19 @@ private fun registerUser(email: String, nickname: String, password: String,navCo
                 user?.updateProfile(profileUpdates)
                     ?.addOnCompleteListener { profileTask ->
                         if (profileTask.isSuccessful) {
-                            Toast.makeText(context, "Registration successful", Toast.LENGTH_SHORT).show()
-                            addToDB(email, nickname, password)
+                            Toast.makeText(context, context.getString(R.string.succ), Toast.LENGTH_SHORT).show()
+                            addToDB(email, nickname)
                             navController.navigate("setup")
                         } else {
-                            Log.w(TAG, "Failed to update user profile", profileTask.exception)
-                            Toast.makeText(context, "Failed to update user profile", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.unsucc), Toast.LENGTH_SHORT).show()
                         }
                     }
             }
-    Toast.makeText(context, "Registration successful", Toast.LENGTH_SHORT).show()
-}
+            Toast.makeText(context, context.getString(R.string.succ), Toast.LENGTH_SHORT).show()
+        }
 }
 
-private fun addToDB(email: String, nickname: String, password: String) {
+private fun addToDB(email: String, nickname: String) {
     val db = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
     val userId = currentUser?.uid
@@ -142,10 +135,8 @@ private fun addToDB(email: String, nickname: String, password: String) {
             .document(userId)
             .set(user)
             .addOnSuccessListener {
-                Log.d(TAG, "DocumentSnapshot added with ID: $userId")
             }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
+            .addOnFailureListener {
             }
     }
 }

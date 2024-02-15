@@ -1,4 +1,4 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,7 +30,7 @@ fun SetupForm(navController: NavController) {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = stringResource(R.string.pyramida),
+            text = stringResource(R.string.rof),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(top = 16.dp, bottom = 148.dp)
         )

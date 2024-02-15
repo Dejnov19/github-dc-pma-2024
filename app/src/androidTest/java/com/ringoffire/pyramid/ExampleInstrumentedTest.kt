@@ -1,4 +1,4 @@
-package com.example.pyramid
+package com.ringoffire.pyramid
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
