@@ -1,0 +1,101 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- TextView for heading -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Jakou pizzu si chceš objednat?"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"/>
+
+    <!-- RadioGroup for pizza selection -->
+    <RadioGroup
+        android:id="@+id/radioGroupPizza"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp">
+
+        <RadioButton
+            android:id="@+id/radioPizza1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Margarita" />
+
+        <RadioButton
+            android:id="@+id/radioPizza2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pepperoni" />
+
+        <RadioButton
+            android:id="@+id/radioPizza3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hawaiian" />
+    </RadioGroup>
+
+    <!-- CheckBoxes for pizza options -->
+    <CheckBox
+        android:id="@+id/checkBoxCheese"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Extra sýrový"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupPizza"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="8dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBoxSpicy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pikantní"
+        app:layout_constraintTop_toBottomOf="@id/checkBoxCheese"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="8dp"/>
+
+    <CheckBox
+        android:id="@+id/checkBoxGlutenFree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bezlepková"
+        app:layout_constraintTop_toBottomOf="@id/checkBoxSpicy"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="8dp"/>
+
+    <!-- Button for ordering -->
+    <Button
+        android:id="@+id/buttonOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Objednat pizzu"
+        app:layout_constraintTop_toBottomOf="@id/checkBoxGlutenFree"
+        app:layout_constraintStart_toStartOf="parent"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- ImageView for displaying pizza image -->
+    <ImageView
+        android:id="@+id/imageViewPizza"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/buttonOrder"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:scaleType="centerCrop"
+        android:padding="16dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
