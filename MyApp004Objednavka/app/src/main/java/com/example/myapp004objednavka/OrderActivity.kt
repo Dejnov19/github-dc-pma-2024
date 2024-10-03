@@ -20,5 +20,9 @@ class OrderActivity : AppCompatActivity() {
 
         // Display the order summary in the TextView
         binding.textViewOrderDetails.text = orderSummary
+
+        binding.buttonBack.setOnClickListener {
+            finish() // Ukončí aktuální aktivitu a vrátí se na předchozí
+        }
     }
 }
