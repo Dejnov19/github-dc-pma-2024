@@ -5,6 +5,7 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.example.myapp004objednavka.databinding.ActivityMainBinding
 import android.widget.Toast
+import android.content.Intent
 
 
 class MainActivity : AppCompatActivity() {
@@ -46,5 +47,30 @@ class MainActivity : AppCompatActivity() {
             // Example: display as a Toast
             Toast.makeText(this, orderSummary, Toast.LENGTH_LONG).show()
         }
+
+        binding.buttonOrder.setOnClickListener {
+            val selectedPizza = when (binding.radioGroupPizza.checkedRadioButtonId) {
+                R.id.radioPizza1 -> "Margarita"
+                R.id.radioPizza2 -> "Pepperoni"
+                R.id.radioPizza3 -> "Hawaiian"
+                else -> "No pizza selected"
+            }
+
+            val extras = mutableListOf<String>()
+            if (binding.checkBoxCheese.isChecked) extras.add("Extra sýrový")
+            if (binding.checkBoxSpicy.isChecked) extras.add("Pikantní")
+            if (binding.checkBoxGlutenFree.isChecked) extras.add("Bezlepková")
+
+            // Vytvoření souhrnu objednávky
+            val orderSummary = "Objednáno: $selectedPizza s doplňky: ${extras.joinToString()}"
+
+            // Spuštění nové aktivity a předání souhrnu objednávky
+            val intent = Intent(this, OrderActivity::class.java)
+            intent.putExtra("ORDER_SUMMARY", orderSummary)
+            startActivity(intent)
+        }
+
     }
+
 }
+
