@@ -47,14 +47,24 @@ fun ComposeExample(navController: NavHostController, namesList: MutableList<Stri
     var age by remember { mutableStateOf("") }
     var place by remember { mutableStateOf("") }
     var resultText by remember { mutableStateOf("") }
-    var rank by remember { mutableStateOf("") }
+
+    // Přidáme dvě nové proměnné pro výběr ranku a divize
+    var selectedRank by remember { mutableStateOf("Iron") }
+    var expandedRank by remember { mutableStateOf(false) }
+
+    var selectedDivision by remember { mutableStateOf("I") }
+    var expandedDivision by remember { mutableStateOf(false) }
+
+    // Seznam ranků a divizí
+    val ranks = listOf("Iron", "Bronze", "Silver", "Gold", "Platinum", "Diamond", "Master", "Grandmaster", "Challenger")
+    val divisions = listOf("I", "II", "III", "IV")
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Moje Aplikace", color = Color.White) },
+            CenterAlignedTopAppBar(
+                title = { Text("LoL registrace", color = Color.White) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.DarkGray,
+                    containerColor = Color.DarkGray
                 )
             )
         }
@@ -94,12 +104,56 @@ fun ComposeExample(navController: NavHostController, namesList: MutableList<Stri
                 label = { Text("Bydliště") },
                 modifier = Modifier.fillMaxWidth()
             )
-            OutlinedTextField(
-                value = rank,
-                onValueChange = { rank = it },
-                label = { Text("LoL Rank") },
-                modifier = Modifier.fillMaxWidth()
-            )
+
+            // Dropdown pro výběr ranku
+            Box(modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(
+                    onClick = { expandedRank = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Rank: $selectedRank")
+                }
+                DropdownMenu(
+                    expanded = expandedRank,
+                    onDismissRequest = { expandedRank = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    ranks.forEach { rank ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedRank = rank
+                                expandedRank = false
+                            },
+                            text = { Text(text = rank) }
+                        )
+                    }
+                }
+            }
+
+            // Dropdown pro výběr divize
+            Box(modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(
+                    onClick = { expandedDivision = true },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(text = "Divize: $selectedDivision")
+                }
+                DropdownMenu(
+                    expanded = expandedDivision,
+                    onDismissRequest = { expandedDivision = false },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    divisions.forEach { division ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedDivision = division
+                                expandedDivision = false
+                            },
+                            text = { Text(text = division) }
+                        )
+                    }
+                }
+            }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -107,8 +161,8 @@ fun ComposeExample(navController: NavHostController, namesList: MutableList<Stri
             ) {
                 Button(
                     onClick = {
-                        resultText = "Jmenuji se $name $surname. Je mi $age let a moje bydliště je $place."
-                        namesList.add("$name $surname")  // Přidání jména do seznamu
+                        resultText = "Jmenuji se $name $surname. Je mi $age let, moje bydliště je $place a můj rank je $selectedRank $selectedDivision."
+                        namesList.add("$name $surname ($selectedRank $selectedDivision)")  // Přidání jména a ranku do seznamu
                     },
                     modifier = Modifier.weight(1f)
                 ) {
@@ -159,10 +213,10 @@ fun ComposeExample(navController: NavHostController, namesList: MutableList<Stri
 fun NameListScreen(navController: NavHostController, namesList: MutableList<String>) {
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text("Seznam Jmen", color = Color.White) },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.DarkGray,
+                    containerColor = Color.DarkGray
                 )
             )
         }
@@ -177,6 +231,7 @@ fun NameListScreen(navController: NavHostController, namesList: MutableList<Stri
             if (namesList.isEmpty()) {
                 Text("Seznam je prázdný.")
             } else {
+                // Vypíšeme seznam jmen s rankem a divizí
                 namesList.forEach { name ->
                     Text(text = name)
                 }
