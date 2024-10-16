@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyApp006MoreActivities"
 include(":app")
- 

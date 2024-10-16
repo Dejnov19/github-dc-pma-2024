@@ -5,23 +5,19 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/nicknameInput"
+    <TextView
+        android:id="@+id/successMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Zadejte přezdívku" />
-
-    <EditText
-        android:id="@+id/divisionInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Zadejte divizi" />
+        android:text="Hráč úspěšně přidán!"
+        android:textSize="18sp"
+        android:textAlignment="center" />
 
     <Button
-        android:id="@+id/addPlayerButton"
+        android:id="@+id/backButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Přidat hráče" />
+        android:text="Zpět" />
 
     <Button
         android:id="@+id/showListButton"
