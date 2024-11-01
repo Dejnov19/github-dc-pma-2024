@@ -9,13 +9,13 @@
         android:id="@+id/buttonShowFragmentOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Fragment One" />
+        android:text="Wake up Fragment" />
 
     <Button
         android:id="@+id/buttonShowFragmentTwo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Fragment Two" />
+        android:text="Bober ku*wa Fragment" />
 
     <FrameLayout
         android:id="@+id/fragmentContainer"
