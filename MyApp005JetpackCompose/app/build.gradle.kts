@@ -51,7 +51,7 @@ android {
 
 dependencies {
 
-    implementation("androidx.navigation:navigation-compose:2.7.1") // Přidání navigace
+    implementation("androidx.navigation:navigation-compose:2.8.4") // Přidání navigace
     // Další závislosti
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
