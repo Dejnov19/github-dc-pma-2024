@@ -112,8 +112,15 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun updateTask(task: Task) {
-        // Tady později napojíme Firestore update
-        println("Task updated: ${task.name}, completed: ${task.isCompleted}")
+        // Update task in Firestore
+        firestore.collection("tasks").document(task.id!!)
+            .set(task) // Replace the entire task document
+            .addOnSuccessListener {
+                println("Task updated in Firestore: ${task.name}, completed: ${task.isCompleted}")
+            }
+            .addOnFailureListener { e ->
+                println("Error updating task in Firestore: ${e.message}")
+            }
     }
     private fun listenToTaskUpdates() {
         firestore.collection("tasks").addSnapshotListener { snapshots, e ->
@@ -122,10 +129,13 @@ class MainActivity : AppCompatActivity() {
                 return@addSnapshotListener
             }
 
+            // Vymažte seznam a aktualizujte jej na základě dat ze serveru
             tasks.clear()
-            for (document in snapshots!!) {
+            snapshots?.forEach { document ->
                 val task = document.toObject(Task::class.java)
-                tasks.add(task)
+                if (!tasks.any { it.id == task.id }) {
+                    tasks.add(task)
+                }
             }
             taskAdapter.notifyDataSetChanged()
         }
