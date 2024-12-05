@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
         firestore.collection("tasks").document(newTask.id).set(newTask)
             .addOnSuccessListener {
                 tasks.add(newTask)
-                taskAdapter.notifyItemInserted(tasks.size - 1)
+                //taskAdapter.notifyItemInserted(tasks.size - 1)
                 println("Task added to Firestore: $name")
             }
             .addOnFailureListener { e ->
