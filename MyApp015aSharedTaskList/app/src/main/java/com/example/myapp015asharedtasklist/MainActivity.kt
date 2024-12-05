@@ -3,6 +3,7 @@ package com.example.myapp015asharedtasklist
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -65,40 +66,51 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-
-
-
     private fun showAddTaskDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Add Task")
 
-        // Vytvoření vstupního pole
-        val input = EditText(this)
-        input.hint = "Task name"
-        input.inputType = InputType.TYPE_CLASS_TEXT
-        builder.setView(input)
+        // Vytvoření layoutu pro dvě vstupní pole
+        val layout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(16, 16, 16, 16)
+        }
+
+        // První vstupní pole pro název úkolu
+        val taskInput = EditText(this).apply {
+            hint = "Task name"
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        // Druhé vstupní pole pro jméno uživatele
+        val userInput = EditText(this).apply {
+            hint = "Assigned to (user name)"
+            inputType = InputType.TYPE_CLASS_TEXT
+        }
+        // Přidáme vstupní pole do layoutu
+        layout.addView(taskInput)
+        layout.addView(userInput)
+        builder.setView(layout)
 
         // Tlačítka dialogu
         builder.setPositiveButton("Add") { _, _ ->
-            val taskName = input.text.toString()
-            if (taskName.isNotBlank()) {
-                addTask(taskName)
+            val taskName = taskInput.text.toString()
+            val userName = userInput.text.toString()
+
+            if (taskName.isNotBlank() && userName.isNotBlank()) {
+                addTask(taskName, userName)
             } else {
-                Toast.makeText(this, "Task name cannot be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Both fields must be filled", Toast.LENGTH_SHORT).show()
             }
-        }
-        builder.setNegativeButton("Cancel") { dialog, _ ->
-            dialog.cancel()
         }
 
         builder.show()
     }
-    private fun addTask(name: String) {
+    private fun addTask(name: String, assignedTo: String) {
         val newTask = Task(
             id = firestore.collection("tasks").document().id, // Vygenerujeme ID
             name = name,
             isCompleted = false,
-            assignedTo = ""
+            assignedTo = assignedTo
         )
 
         // Uložíme úkol do Firestore
@@ -106,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 tasks.add(newTask)
                 //taskAdapter.notifyItemInserted(tasks.size - 1)
-                println("Task added to Firestore: $name")
+                println("Task added to Firestore: $name (Assigned to: $assignedTo)")
             }
             .addOnFailureListener { e ->
                 println("Error adding task: ${e.message}")
