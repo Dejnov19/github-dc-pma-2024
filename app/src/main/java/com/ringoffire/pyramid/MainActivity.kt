@@ -51,6 +51,7 @@
                         composable("login") { LoginForm(navController,this@MainActivity) }
                         composable("log") { LogForm(navController) }
                         composable("setup") { SetupForm(navController) }
+                        composable("playSetup") { PlaySetupForm(navController) }
                         composable("game") { GameForm(navController) }
                         composable("friends") { FriendsForm(navController) }
                         composable("game") { GameForm(navController) }
