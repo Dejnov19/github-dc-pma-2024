@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "510529845656",
+    "project_id": "pyramid-6071e",
+    "storage_bucket": "pyramid-6071e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510529845656:android:2717e3a42e0372befc93ed",
+        "android_client_info": {
+          "package_name": "com.example.semestralka"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmgdx-2k_5O5kxbTWJdEP7K3t4FijuZ2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
