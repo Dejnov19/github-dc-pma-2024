@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,8 +48,13 @@ fun RegisterForm(navController: NavController) {
             .fillMaxWidth()
             .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
     ) {
+        Text(
+            text = stringResource(R.string.New_user),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(top = 100.dp, bottom = 50.dp)
+        )
         OutlinedTextField(
             value = emailText,
             onValueChange = { emailText = it },

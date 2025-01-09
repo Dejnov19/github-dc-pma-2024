@@ -25,4 +25,9 @@
     <string name="Enter_your_nickname">Zadejte Vaší přezdívku</string>
     <string name="succ">Úspěšná registrace</string>
     <string name="unsucc">Registrace se nezdařila</string>
+    <string name="Add">Přidat</string>
+    <string name="Cancel">Zrušit</string>
+    <string name="Back">Zpět</string>
+    <string name="New_user">Nový uživatel</string>
+    <string name="welcome">Vítej zpátky!</string>
 </resources>
