@@ -24,6 +24,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
