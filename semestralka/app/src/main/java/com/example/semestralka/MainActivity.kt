@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,14 +26,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.semestralka.ui.theme.SemestralkaTheme
-import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
 
@@ -59,7 +56,6 @@ class MainActivity : ComponentActivity() {
                     composable("playSetup") { PlaySetupForm(navController) }
                     composable("game") { GameForm(navController) }
                     composable("friends") { FriendsForm(navController) }
-                    composable("game") { GameForm(navController) }
                     composable("register") { RegisterForm(navController) }
                 }
             }
@@ -82,8 +78,6 @@ fun LoginForm(navController: NavController, activity: ComponentActivity) {
             contentScale = ContentScale.FillBounds,
             alpha = 0.5f
         )
-
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()

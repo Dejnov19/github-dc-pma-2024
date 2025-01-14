@@ -5,18 +5,17 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,61 +45,93 @@ import kotlinx.coroutines.tasks.await
 
 @Composable
 fun FriendsForm(navController: NavController) {
-    val friendsFlow = getUserFriendsFromFirestore().collectAsState(initial = emptyList())
+    var friendsFlow by remember { mutableStateOf(getUserFriendsFromFirestore()) }
+    val friends by friendsFlow.collectAsState(initial = emptyList())
     var isDialogOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
-
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         LazyColumn(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(friendsFlow.value) { friend ->
-                FriendItem(friend = friend)
+            items(friends) { friend ->
+                FriendItem(
+                    friendName = friend,
+                    onRemoveFriend = { removeFriendFromDatabase(friend, context) { friendsFlow = getUserFriendsFromFirestore() } }
+                )
             }
         }
-
-        IconButton(
-            onClick = {
-                isDialogOpen = true
-            },
-            modifier = Modifier
-                .align(Alignment.End)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(Icons.Default.Add, contentDescription = "Add Friend")
+            IconButton(onClick = { navController.popBackStack() }) {
+                Text(stringResource(R.string.Back))
+            }
+            IconButton(onClick = { isDialogOpen = true }) {
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.Add))
+            }
         }
+    }
 
-        if (isDialogOpen) {
-            FriendsDialog(
-                onDismissRequest = {
-                    isDialogOpen = false
-                }
-            ) { friendName -> //on cofrim
-                addFriendToDatabase(friendName,context)
+    if (isDialogOpen) {
+        FriendsDialog(
+            onDismissRequest = { isDialogOpen = false },
+            onConfirmation = { friendName ->
+                addFriendToDatabase(friendName, context) { friendsFlow = getUserFriendsFromFirestore() }
                 isDialogOpen = false
             }
+        )
+    }
+}
+
+@Composable
+fun FriendItem(friendName: String, onRemoveFriend: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = friendName, modifier = Modifier.weight(1f))
+        IconButton(onClick = onRemoveFriend) {
+            Text("❌") // Malý křížek pro odstranění
         }
     }
 }
 
-
-
-
-@Composable
-fun FriendItem(friend: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(vertical = 8.dp)
-    ) {
-        Icon(Icons.Default.Person, contentDescription = null)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = friend)
+fun removeFriendFromDatabase(friendName: String, context: Context, onSuccess: () -> Unit) {
+    val db = Firebase.firestore
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    val userId = currentUser?.uid
+    if (userId != null) {
+        db.collection("users")
+            .whereEqualTo("nickname", friendName)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot.documents) {
+                    db.collection("users").document(userId)
+                        .update("friends", FieldValue.arrayRemove(document.id))
+                        .addOnSuccessListener {
+                            Toast.makeText(context, R.string.friend_deleted, Toast.LENGTH_SHORT).show()
+                            onSuccess()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+            }
     }
 }
 
@@ -127,37 +158,41 @@ fun getUserFriendsFromFirestore(): Flow<List<String>> = flow {
     }
 }
 
-
-fun addFriendToDatabase(friendName: String, context: Context) {
+fun addFriendToDatabase(friendName: String, context: Context, onSuccess: () -> Unit) {
     val db = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
     val userId = currentUser?.uid
     if (userId != null) {
-
         db.collection("users")
             .whereEqualTo("nickname", friendName)
-            .get().addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot.documents) {
-
-                    db.collection("users").document(userId)
-                        .update("friends", FieldValue.arrayUnion(document.id))
-                        .addOnSuccessListener {
-                            Toast.makeText(context, R.string.friend_added, Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
-
-                        }
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot.isEmpty) {
+                    // Pokud neexistuje žádný dokument, přezdívka nebyla nalezena
+                    Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+                } else {
+                    // Pokud je přezdívka nalezena, přidej ji do databáze
+                    for (document in querySnapshot.documents) {
+                        db.collection("users").document(userId)
+                            .update("friends", FieldValue.arrayUnion(document.id))
+                            .addOnSuccessListener {
+                                Toast.makeText(context, R.string.friend_added, Toast.LENGTH_SHORT).show()
+                                onSuccess()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 }
-            }.addOnFailureListener { e ->
+            }
+            .addOnFailureListener {
                 Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
             }
-
-
-
-
+    } else {
+        Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
     }
 }
+
 @Composable
 fun FriendsDialog(
     onDismissRequest: () -> Unit,
@@ -165,52 +200,30 @@ fun FriendsDialog(
 ) {
     var friendNameText by remember { mutableStateOf("") }
 
-    Dialog(onDismissRequest = { onDismissRequest() }) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(375.dp)
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                OutlinedTextField(
-                    value = friendNameText,
-                    onValueChange = { friendNameText = it },
-                    label = { R.string.Friend_Name },
-                    placeholder = { R.string.Friend_Name },
-                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    TextButton(
-                        onClick = { onDismissRequest() },
-                        modifier = Modifier.padding(8.dp),
-                    ) {
-                        Text(stringResource(R.string.exit))
-                    }
-                    TextButton(
-                        onClick = { onConfirmation(friendNameText) },
-                        modifier = Modifier.padding(8.dp),
-                    ) {
-                        Text(stringResource(R.string.Confirm))
-                    }
-                }
+    AlertDialog(
+        onDismissRequest = { onDismissRequest() },
+        title = { Text(text = stringResource(R.string.Friend_Name)) },
+        text = {
+            OutlinedTextField(
+                value = friendNameText,
+                onValueChange = { friendNameText = it },
+                label = { Text(stringResource(R.string.Friend_Name)) },
+                placeholder = { Text(stringResource(R.string.Friend_Name)) },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = {
+                onConfirmation(friendNameText)
+            }) {
+                Text(stringResource(R.string.Confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = { onDismissRequest() }) {
+                Text(stringResource(R.string.exit))
             }
         }
-    }
+    )
 }
-
-
-

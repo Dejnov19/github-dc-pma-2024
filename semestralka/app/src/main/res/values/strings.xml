@@ -8,6 +8,7 @@
     <string name="play">Hrát</string>
     <string name="rof">Ring of Fire</string>
     <string name="friend_added">Přítel přidán</string>
+    <string name="friend_deleted">Přítel odebrán</string>
     <string name="Friend_doesnt_exist">Přítel neexistuje</string>
     <string name="Friend_Name">Jméno přitele</string>
     <string name="Confirm">Potvrdit</string>

@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+// Seznam obrázků karet, které se náhodně zamíchají
 @Composable
 fun GameForm(navController: NavController) {
     val cardImages = listOf(
@@ -95,6 +96,7 @@ fun GameForm(navController: NavController) {
 
         ).shuffled()
 
+    // Mapování obrázků karet na jejich popisky
     val cardNames = remember {
         mapOf(
             R.drawable.ace_of_diamonds to "Waterfall",
@@ -161,16 +163,19 @@ fun GameForm(navController: NavController) {
             R.drawable.two_of_diamonds to "Two YOU",
             R.drawable.two_of_hearts to "Two YOU",
             R.drawable.two_of_spades to "Two YOU",
+        )
+    }
 
-
-            )}
-
+    // Celkový počet karet
     val totalCards = cardImages.size
     val currentImageIndex = remember { mutableIntStateOf(0) }
 
+    // Seznam přátel uživatele, načítá se z Firebase
     val friendList = remember { mutableStateOf<List<String>>(emptyList()) }
-    val currentFriendIndex = remember { mutableStateOf(0) }
+    // Index aktuálního přítele
+    val currentFriendIndex = remember { mutableIntStateOf(0) }
 
+    // Načtení seznamu přátel při spuštění composable
     LaunchedEffect(key1 = "fetchSingleFriend") {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId != null) {
@@ -184,10 +189,10 @@ fun GameForm(navController: NavController) {
                     }
                 }
                 .addOnFailureListener {
-                }
+                } // Zpracování chyby při načítání
         }
     }
-
+    // Rozložení obsahu na obrazovce
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -195,13 +200,14 @@ fun GameForm(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Zobrazení aktuálního frienda
         Text(
-            text = friendList.value.getOrNull(currentFriendIndex.value) ?: stringResource(R.string.loading),
+            text = friendList.value.getOrNull(currentFriendIndex.intValue) ?: stringResource(R.string.loading),
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
+        // Zobrazení názvu aktuální karty
         getCardName(cardImages[currentImageIndex.intValue], cardNames)?.let {
             Text(
                 text = it,
@@ -209,7 +215,7 @@ fun GameForm(navController: NavController) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
-
+        // Zobrazení obrázku aktuální karty
         Image(
             painter = painterResource(id = cardImages[currentImageIndex.intValue]),
             contentDescription = "Actual card",
@@ -217,19 +223,27 @@ fun GameForm(navController: NavController) {
                 .size(200.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
+        // Zobrazení počítadla karet
         Text("Card ${currentImageIndex.intValue + 1}/$totalCards")
         Spacer(modifier = Modifier.height(16.dp))
+        // Tlačítko pro přechod na další kartu a přítele
         Button(onClick = {
             currentImageIndex.intValue = (currentImageIndex.intValue + 1) % totalCards
-            currentFriendIndex.value = (currentFriendIndex.value + 1) % friendList.value.size
+            currentFriendIndex.intValue = (currentFriendIndex.intValue + 1) % friendList.value.size
 
         }) {
             Text(stringResource(R.string.Next_Card))
         }
+        Spacer(modifier = Modifier.height(16.dp))
+        // Tlačítko pro návrat do hlavního menu
+        Button(onClick = {
+            navController.navigate("setup")
+        }) {
+            Text(stringResource(R.string.exit))
+        }
     }
-
-
 }
+// Funkce pro získání názvu karty podle jejího ID
 fun getCardName(imageResourceId: Int, cardNames: Map<Int, String>): String? {
     return cardNames[imageResourceId]
 }
