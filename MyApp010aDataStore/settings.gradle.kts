@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyApp010aDataStore"
 include(":app")
- 

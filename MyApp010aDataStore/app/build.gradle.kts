@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.myapp010adatastore"
-        minSdk = 28
+        minSdk = 27
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -45,8 +45,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.datastore.core.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
