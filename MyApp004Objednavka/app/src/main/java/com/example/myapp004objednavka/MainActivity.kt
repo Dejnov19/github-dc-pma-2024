@@ -7,7 +7,6 @@ import com.example.myapp004objednavka.databinding.ActivityMainBinding
 import android.widget.Toast
 import android.content.Intent
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -73,4 +72,3 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
-

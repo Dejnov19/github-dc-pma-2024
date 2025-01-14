@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyApp004Objednavka"
 include(":app")
- 
