@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyApp009aSharedPreferences"
 include(":app")
- 
