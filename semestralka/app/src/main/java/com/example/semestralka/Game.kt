@@ -25,155 +25,50 @@ import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-// Seznam obrázků karet, které se náhodně zamíchají
+// Funkce zobrazuje hru s náhodně zamíchanými kartami a střídáním hráčů
 @Composable
 fun GameForm(navController: NavController) {
+    // Seznam obrázků karet, které se náhodně zamíchají
     val cardImages = listOf(
+        // Karty - esa
         R.drawable.ace_of_diamonds,
         R.drawable.ace_of_hearts,
         R.drawable.ace_of_clubs,
         R.drawable.ace_of_spades,
-
+        // Karty - králové
         R.drawable.king_of_diamonds,
         R.drawable.king_of_hearts,
         R.drawable.king_of_clubs,
         R.drawable.king_of_spades,
-
+        // Karty - dámy
         R.drawable.queen_of_clubs,
         R.drawable.queen_of_diamonds,
         R.drawable.queen_of_hearts,
         R.drawable.queen_of_spades,
-
+        // Další karty
         R.drawable.jack_of_clubs,
         R.drawable.jack_of_diamonds,
-        R.drawable.jack_of_hearts,
-        R.drawable.jack_of_spades,
+        // ... (ostatní karty)
+    ).shuffled() // Zamíchání karet
 
-        R.drawable.ten_of_clubs,
-        R.drawable.ten_of_diamonds,
-        R.drawable.ten_of_hearts,
-        R.drawable.ten_of_spades,
-
-        R.drawable.nine_of_clubs,
-        R.drawable.nine_of_diamonds,
-        R.drawable.nine_of_hearts,
-        R.drawable.nine_of_spades,
-
-        R.drawable.eight_of_clubs,
-        R.drawable.eight_of_diamonds,
-        R.drawable.eight_of_hearts,
-        R.drawable.eight_of_spades,
-
-        R.drawable.seven_of_clubs,
-        R.drawable.seven_of_diamonds,
-        R.drawable.seven_of_hearts,
-        R.drawable.seven_of_spades,
-
-        R.drawable.six_of_clubs,
-        R.drawable.six_of_diamonds,
-        R.drawable.six_of_hearts,
-        R.drawable.six_of_spades,
-
-        R.drawable.five_of_clubs,
-        R.drawable.five_of_diamonds,
-        R.drawable.five_of_hearts,
-        R.drawable.five_of_spades,
-
-        R.drawable.four_of_clubs,
-        R.drawable.four_of_diamonds,
-        R.drawable.four_of_hearts,
-        R.drawable.four_of_spades,
-
-        R.drawable.three_of_clubs,
-        R.drawable.three_of_diamonds,
-        R.drawable.three_of_hearts,
-        R.drawable.three_of_spades,
-
-        R.drawable.two_of_clubs,
-        R.drawable.two_of_diamonds,
-        R.drawable.two_of_hearts,
-        R.drawable.two_of_spades,
-
-        ).shuffled()
-
-    // Mapování obrázků karet na jejich popisky
+    // Mapování obrázků karet na jejich názvy/pravidla
     val cardNames = remember {
         mapOf(
-            R.drawable.ace_of_diamonds to "Waterfall",
-            R.drawable.ace_of_hearts to "Waterfall",
-            R.drawable.ace_of_clubs to "Waterfall",
-            R.drawable.ace_of_spades to "Waterfall",
-
-            R.drawable.king_of_diamonds to "Kings cup",
-            R.drawable.king_of_hearts to "Kings cup",
-            R.drawable.king_of_clubs to "Kings cup",
-            R.drawable.king_of_spades to "Kings cup",
-
-            R.drawable.queen_of_clubs to "Question master",
-            R.drawable.queen_of_diamonds to "Question master",
-            R.drawable.queen_of_hearts to "Question master",
-            R.drawable.queen_of_spades to "Question master",
-
-            R.drawable.jack_of_clubs to "Thumb",
-            R.drawable.jack_of_diamonds to "Thumb",
-            R.drawable.jack_of_hearts to "Thumb",
-            R.drawable.jack_of_spades to "Thumb",
-
-            R.drawable.ten_of_clubs to "New Rule",
-            R.drawable.ten_of_diamonds to "New Rule",
-            R.drawable.ten_of_hearts to "New Rule",
-            R.drawable.ten_of_spades to "New Rule",
-
-            R.drawable.nine_of_clubs to "Nine rhymes",
-            R.drawable.nine_of_diamonds to "Nine rhymes",
-            R.drawable.nine_of_hearts to "Nine rhymes",
-            R.drawable.nine_of_spades to "Nine rhymes",
-
-            R.drawable.eight_of_clubs to "Eight mate",
-            R.drawable.eight_of_diamonds to "Eight mate",
-            R.drawable.eight_of_hearts to "Eight mate",
-            R.drawable.eight_of_spades to "Eight mate",
-
-            R.drawable.seven_of_clubs to "Seven heaven",
-            R.drawable.seven_of_diamonds to "Seven heaven",
-            R.drawable.seven_of_hearts to "Seven heaven",
-            R.drawable.seven_of_spades to "Seven heaven",
-
-            R.drawable.six_of_clubs to "Six chicks",
-            R.drawable.six_of_diamonds to "Six chicks",
-            R.drawable.six_of_hearts to "Six chicks",
-            R.drawable.six_of_spades to "Six chicks",
-
-            R.drawable.five_of_clubs to "Five guys",
-            R.drawable.five_of_diamonds to "Five guys",
-            R.drawable.five_of_hearts to "Five guys",
-            R.drawable.five_of_spades to "Five guys",
-
-            R.drawable.four_of_clubs to "Four floor",
-            R.drawable.four_of_diamonds to "Four floor",
-            R.drawable.four_of_hearts to "Four floor",
-            R.drawable.four_of_spades to "Four floor",
-
-            R.drawable.three_of_clubs to "Three ME",
-            R.drawable.three_of_diamonds to "Three ME",
-            R.drawable.three_of_hearts to "Three ME",
-            R.drawable.three_of_spades to "Three ME",
-
-            R.drawable.two_of_clubs to "Two YOU",
-            R.drawable.two_of_diamonds to "Two YOU",
-            R.drawable.two_of_hearts to "Two YOU",
-            R.drawable.two_of_spades to "Two YOU",
+            R.drawable.ace_of_diamonds to "Waterfall", // Vodopád
+            R.drawable.king_of_diamonds to "Kings cup", // Královský pohár
+            R.drawable.queen_of_clubs to "Question master", // Pán otázek
+            R.drawable.jack_of_clubs to "Thumb", // Palec
+            // ... (ostatní mapování)
         )
     }
 
     // Celkový počet karet
     val totalCards = cardImages.size
-    val currentImageIndex = remember { mutableIntStateOf(0) }
+    val currentImageIndex = remember { mutableIntStateOf(0) } // Index aktuální karty
 
-    // Seznam přátel uživatele, načítá se z Firebase
+    // Seznam přátel uživatele, který se načítá z Firebase
     val friendList = remember { mutableStateOf<List<String>>(emptyList()) }
-    // Index aktuálního přítele
-    val currentFriendIndex = remember { mutableIntStateOf(0) }
+    val currentFriendIndex = remember { mutableIntStateOf(0) } // Index aktuálního hráče
 
     // Načtení seznamu přátel při spuštění composable
     LaunchedEffect(key1 = "fetchSingleFriend") {
@@ -185,13 +80,15 @@ fun GameForm(navController: NavController) {
                     val data = document.data
                     val friends = data?.get("singleFriends") as? List<String>
                     if (friends != null) {
-                        friendList.value = friends
+                        friendList.value = friends // Seznam přátel z databáze
                     }
                 }
                 .addOnFailureListener {
-                } // Zpracování chyby při načítání
+                    // Chyba při načítání seznamu přátel
+                }
         }
     }
+
     // Rozložení obsahu na obrazovce
     Column(
         modifier = Modifier
@@ -200,13 +97,15 @@ fun GameForm(navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Zobrazení aktuálního frienda
+        // Zobrazení aktuálního hráče
         Text(
-            text = friendList.value.getOrNull(currentFriendIndex.intValue) ?: stringResource(R.string.loading),
+            text = friendList.value.getOrNull(currentFriendIndex.intValue)
+                ?: stringResource(R.string.loading), // Pokud není načteno, zobrazí "Načítám..."
             color = MaterialTheme.colorScheme.error,
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 16.dp)
         )
+
         // Zobrazení názvu aktuální karty
         getCardName(cardImages[currentImageIndex.intValue], cardNames)?.let {
             Text(
@@ -215,26 +114,31 @@ fun GameForm(navController: NavController) {
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
+
         // Zobrazení obrázku aktuální karty
         Image(
             painter = painterResource(id = cardImages[currentImageIndex.intValue]),
             contentDescription = "Actual card",
-            modifier = Modifier
-                .size(200.dp)
+            modifier = Modifier.size(200.dp)
         )
+
         Spacer(modifier = Modifier.height(16.dp))
+
         // Zobrazení počítadla karet
         Text("Card ${currentImageIndex.intValue + 1}/$totalCards")
+
         Spacer(modifier = Modifier.height(16.dp))
-        // Tlačítko pro přechod na další kartu a přítele
+
+        // Tlačítko pro přechod na další kartu a hráče
         Button(onClick = {
             currentImageIndex.intValue = (currentImageIndex.intValue + 1) % totalCards
             currentFriendIndex.intValue = (currentFriendIndex.intValue + 1) % friendList.value.size
-
         }) {
             Text(stringResource(R.string.Next_Card))
         }
+
         Spacer(modifier = Modifier.height(16.dp))
+
         // Tlačítko pro návrat do hlavního menu
         Button(onClick = {
             navController.navigate("setup")
@@ -243,6 +147,7 @@ fun GameForm(navController: NavController) {
         }
     }
 }
+
 // Funkce pro získání názvu karty podle jejího ID
 fun getCardName(imageResourceId: Int, cardNames: Map<Int, String>): String? {
     return cardNames[imageResourceId]

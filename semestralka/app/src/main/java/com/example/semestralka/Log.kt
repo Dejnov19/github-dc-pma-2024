@@ -33,10 +33,11 @@ import com.google.firebase.ktx.Firebase
 
 @Composable
 fun LogForm(navController: NavController) {
+    // Proměnné pro uložení emailu a hesla uživatele
     var emailText by remember { mutableStateOf("") }
     var passwordText by remember { mutableStateOf("") }
     val buttonWidth = 150.dp
-    val context = LocalContext.current
+    val context = LocalContext.current // Získání aktuálního kontextu aplikace
 
     Column(
         modifier = Modifier
@@ -45,21 +46,25 @@ fun LogForm(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
     ) {
+        // Zobrazení uvítacího textu
         Text(
             text = stringResource(R.string.welcome),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(top = 100.dp, bottom = 50.dp)
         )
+
+        // Textové pole pro zadání emailu
         OutlinedTextField(
             value = emailText,
             onValueChange = { emailText = it },
             label = { Text("Email") },
             placeholder = { Text(stringResource(R.string.Enter_your_email)) },
-            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-            trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) },
+            leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) }, // Ikona před polem
+            trailingIcon = { Icon(Icons.Default.Clear, contentDescription = null) }, // Ikona za polem
             modifier = Modifier.fillMaxWidth().padding(20.dp)
         )
 
+        // Textové pole pro zadání hesla
         OutlinedTextField(
             value = passwordText,
             onValueChange = { passwordText = it },
@@ -70,31 +75,37 @@ fun LogForm(navController: NavController) {
             modifier = Modifier.fillMaxWidth().padding(20.dp)
         )
 
+        // Tlačítko pro přihlášení
         FilledTonalButton(
             onClick = {
-
-                signInWithEmailAndPassword(emailText, passwordText,navController,context)
-                //
+                // Přihlášení uživatele pomocí emailu a hesla
+                signInWithEmailAndPassword(emailText, passwordText, navController, context)
             },
-            modifier = Modifier
-                .width(buttonWidth)
+            modifier = Modifier.width(buttonWidth)
         ) {
             Text(stringResource(R.string.login))
         }
     }
 }
 
+// Funkce pro přihlášení uživatele pomocí Firebase
 private fun signInWithEmailAndPassword(email: String, password: String, navController: NavController, context: Context) {
-    val auth = Firebase.auth
+    val auth = Firebase.auth // Inicializace Firebase autentizace
+
+    // Ověření, zda nejsou vstupní pole prázdná
     if (email.isBlank() || password.isBlank()) {
         Toast.makeText(context, context.getString(R.string.Cannot_be_empty), Toast.LENGTH_SHORT).show()
         return
     }
+
+    // Přihlášení pomocí Firebase
     auth.signInWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
+                // Pokud je přihlášení úspěšné, naviguje na obrazovku "setup"
                 navController.navigate("setup")
-            } else { //if didnt connect
+            } else {
+                // Pokud přihlášení selže, zobrazí chybovou hlášku
                 Toast.makeText(
                     context,
                     context.getString(R.string.wrong),

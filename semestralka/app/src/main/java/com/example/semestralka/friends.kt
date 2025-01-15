@@ -1,5 +1,6 @@
 package com.example.semestralka
 
+// Importy potřebné pro Jetpack Compose a Firebase
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -7,16 +8,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -33,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -43,98 +40,110 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
+// Komponenta pro obrazovku s přáteli
 @Composable
 fun FriendsForm(navController: NavController) {
-    var friendsFlow by remember { mutableStateOf(getUserFriendsFromFirestore()) }
-    val friends by friendsFlow.collectAsState(initial = emptyList())
-    var isDialogOpen by remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    var friendsFlow by remember { mutableStateOf(getUserFriendsFromFirestore()) } // Data přátel z Firestore
+    val friends by friendsFlow.collectAsState(initial = emptyList()) // Poslouchání změn dat
+    var isDialogOpen by remember { mutableStateOf(false) } // Stav dialogu (otevřený/zavřený)
+    val context = LocalContext.current // Kontext aplikace
 
+    // Rozvržení obrazovky
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceBetween
+            .fillMaxSize() // Sloupec zabírá celou obrazovku
+            .padding(50.dp), // Vnější odsazení
+        verticalArrangement = Arrangement.SpaceBetween // Rozložení prvků ve sloupci
     ) {
+        // Seznam přátel
         LazyColumn(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.weight(1f), // Zabírá dostupný prostor
+            verticalArrangement = Arrangement.spacedBy(8.dp) // Mezera mezi položkami
         ) {
             items(friends) { friend ->
                 FriendItem(
                     friendName = friend,
-                    onRemoveFriend = { removeFriendFromDatabase(friend, context) { friendsFlow = getUserFriendsFromFirestore() } }
+                    onRemoveFriend = {
+                        // Odebrání přítele z databáze a obnovení dat
+                        removeFriendFromDatabase(friend, context) { friendsFlow = getUserFriendsFromFirestore() }
+                    }
                 )
             }
         }
+
+        // Řádek s tlačítky
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.SpaceBetween, // Zarovnání tlačítek na kraje
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = { navController.popBackStack() }) {
-                Text(stringResource(R.string.Back))
+                Text(stringResource(R.string.Back)) // Tlačítko zpět
             }
             IconButton(onClick = { isDialogOpen = true }) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.Add))
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.Add)) // Tlačítko pro přidání
             }
         }
     }
 
+    // Dialog pro přidání přítele
     if (isDialogOpen) {
         FriendsDialog(
-            onDismissRequest = { isDialogOpen = false },
+            onDismissRequest = { isDialogOpen = false }, // Zavření dialogu
             onConfirmation = { friendName ->
-                addFriendToDatabase(friendName, context) { friendsFlow = getUserFriendsFromFirestore() }
+                addFriendToDatabase(friendName, context) { friendsFlow = getUserFriendsFromFirestore() } // Přidání přítele
                 isDialogOpen = false
             }
         )
     }
 }
 
+// Položka seznamu přátel
 @Composable
 fun FriendItem(friendName: String, onRemoveFriend: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(8.dp), // Vnější odsazení
+        horizontalArrangement = Arrangement.SpaceBetween, // Zarovnání na kraje
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = friendName, modifier = Modifier.weight(1f))
+        Text(text = friendName, modifier = Modifier.weight(1f)) // Jméno přítele
         IconButton(onClick = onRemoveFriend) {
-            Text("❌") // Malý křížek pro odstranění
+            Text("❌") // Ikona pro odstranění
         }
     }
 }
 
+// Funkce pro odstranění přítele z databáze
 fun removeFriendFromDatabase(friendName: String, context: Context, onSuccess: () -> Unit) {
     val db = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
     val userId = currentUser?.uid
     if (userId != null) {
         db.collection("users")
-            .whereEqualTo("nickname", friendName)
+            .whereEqualTo("nickname", friendName) // Hledání přítele podle přezdívky
             .get()
             .addOnSuccessListener { querySnapshot ->
                 for (document in querySnapshot.documents) {
                     db.collection("users").document(userId)
-                        .update("friends", FieldValue.arrayRemove(document.id))
+                        .update("friends", FieldValue.arrayRemove(document.id)) // Odebrání přítele
                         .addOnSuccessListener {
-                            Toast.makeText(context, R.string.friend_deleted, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.friend_deleted, Toast.LENGTH_SHORT).show() // Notifikace úspěchu
                             onSuccess()
                         }
                         .addOnFailureListener {
-                            Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show() // Notifikace chyby
                         }
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show() // Notifikace chyby
             }
     }
 }
 
+// Získání seznamu přátel z Firestore
 fun getUserFriendsFromFirestore(): Flow<List<String>> = flow {
     val db = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
@@ -152,29 +161,28 @@ fun getUserFriendsFromFirestore(): Flow<List<String>> = flow {
             }
         }
 
-        emit(friendsList)
+        emit(friendsList) // Vrací seznam přátel
     } else {
-        emit(emptyList())
+        emit(emptyList()) // Pokud není uživatel přihlášen
     }
 }
 
+// Přidání přítele do databáze
 fun addFriendToDatabase(friendName: String, context: Context, onSuccess: () -> Unit) {
     val db = Firebase.firestore
     val currentUser = FirebaseAuth.getInstance().currentUser
     val userId = currentUser?.uid
     if (userId != null) {
         db.collection("users")
-            .whereEqualTo("nickname", friendName)
+            .whereEqualTo("nickname", friendName) // Hledání přítele podle přezdívky
             .get()
             .addOnSuccessListener { querySnapshot ->
                 if (querySnapshot.isEmpty) {
-                    // Pokud neexistuje žádný dokument, přezdívka nebyla nalezena
-                    Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show() // Notifikace, pokud přítel neexistuje
                 } else {
-                    // Pokud je přezdívka nalezena, přidej ji do databáze
                     for (document in querySnapshot.documents) {
                         db.collection("users").document(userId)
-                            .update("friends", FieldValue.arrayUnion(document.id))
+                            .update("friends", FieldValue.arrayUnion(document.id)) // Přidání přítele
                             .addOnSuccessListener {
                                 Toast.makeText(context, R.string.friend_added, Toast.LENGTH_SHORT).show()
                                 onSuccess()
@@ -188,11 +196,10 @@ fun addFriendToDatabase(friendName: String, context: Context, onSuccess: () -> U
             .addOnFailureListener {
                 Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
             }
-    } else {
-        Toast.makeText(context, R.string.Friend_doesnt_exist, Toast.LENGTH_SHORT).show()
     }
 }
 
+// Dialog pro přidání přítele
 @Composable
 fun FriendsDialog(
     onDismissRequest: () -> Unit,
@@ -201,11 +208,11 @@ fun FriendsDialog(
     var friendNameText by remember { mutableStateOf("") }
 
     AlertDialog(
-        onDismissRequest = { onDismissRequest() },
+        onDismissRequest = { onDismissRequest() }, // Zavření dialogu
         title = { Text(text = stringResource(R.string.Friend_Name)) },
         text = {
             OutlinedTextField(
-                value = friendNameText,
+                value = friendNameText, // Textové pole pro jméno přítele
                 onValueChange = { friendNameText = it },
                 label = { Text(stringResource(R.string.Friend_Name)) },
                 placeholder = { Text(stringResource(R.string.Friend_Name)) },
@@ -215,14 +222,14 @@ fun FriendsDialog(
         },
         confirmButton = {
             TextButton(onClick = {
-                onConfirmation(friendNameText)
+                onConfirmation(friendNameText) // Potvrzení přidání přítele
             }) {
                 Text(stringResource(R.string.Confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = { onDismissRequest() }) {
-                Text(stringResource(R.string.exit))
+                Text(stringResource(R.string.exit)) // Tlačítko zavření dialogu
             }
         }
     )

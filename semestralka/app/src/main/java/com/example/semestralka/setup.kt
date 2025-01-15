@@ -25,47 +25,52 @@ import androidx.navigation.NavController
 
 @Composable
 fun SetupForm(navController: NavController) {
-    val buttonWidth = 150.dp
+    val buttonWidth = 150.dp // Šířka tlačítek
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize() // Komponenta Box zabírá celou obrazovku
     ) {
+        // Zobrazení pozadí pomocí obrázku
         Image(
-            painter = painterResource(R.drawable.back_removed),
-            contentDescription = "pozadi",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-            alpha = 0.5f
+            painter = painterResource(R.drawable.back_removed), // Obrázek z resources
+            contentDescription = "pozadi", // Popis pro čtečky obrazovky
+            modifier = Modifier.fillMaxSize(), // Obrázek zabírá celou obrazovku
+            contentScale = ContentScale.FillBounds, // Obrázek vyplní celý prostor
+            alpha = 0.5f // Nastavení průhlednosti obrázku
         )
 
+        // Sloupec pro text a tlačítka
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+                .fillMaxWidth() // Sloupec zabírá celou šířku obrazovky
+                .fillMaxHeight(), // Sloupec zabírá celou výšku obrazovky
+            horizontalAlignment = Alignment.CenterHorizontally, // Zarovnání prvků na střed horizontálně
+            verticalArrangement = Arrangement.Center, // Zarovnání prvků na střed vertikálně
         ) {
+            // Zobrazení textu
             Text(
-                text = stringResource(R.string.rof),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(top = 16.dp, bottom = 148.dp)
+                text = stringResource(R.string.rof), // Text získaný z resources
+                style = MaterialTheme.typography.titleLarge, // Styl textu
+                modifier = Modifier.padding(top = 16.dp, bottom = 148.dp) // Vnější odsazení textu
             )
+
+            // Tlačítko "Play"
             FilledTonalButton(
-                onClick = { navController.navigate("playSetup") },
+                onClick = { navController.navigate("playSetup") }, // Akce po kliknutí na tlačítko
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green
+                    containerColor = Color.Green // Barva pozadí tlačítka
                 ),
-                modifier = Modifier
-                    .width(buttonWidth)
+                modifier = Modifier.width(buttonWidth) // Nastavení šířky tlačítka
             ) {
-                Text(stringResource(R.string.play))
+                Text(stringResource(R.string.play)) // Text tlačítka
             }
+
+            // Tlačítko "Friends"
             FilledTonalButton(
-                onClick = { navController.navigate("friends") },
-                modifier = Modifier
-                    .width(buttonWidth)
+                onClick = { navController.navigate("friends") }, // Akce po kliknutí na tlačítko
+                modifier = Modifier.width(buttonWidth) // Nastavení šířky tlačítka
             ) {
-                Text(stringResource(R.string.friends))
+                Text(stringResource(R.string.friends)) // Text tlačítka
             }
         }
     }
